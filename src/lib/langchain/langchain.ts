@@ -6,7 +6,6 @@ import {
 } from "ai-stream-experimental";
 import { streamingModel, nonStreamingModel } from "./llm";
 import { STANDALONE_QUESTION_TEMPLATE, QA_TEMPLATE } from "./prompt";
-import { pgVectorStore } from "./vector-stores/pg-vector";
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 
 type callChainArgs = {

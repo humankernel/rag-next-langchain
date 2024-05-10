@@ -2,7 +2,7 @@
 
 # TODO
 
-- [ ] change UI
+- [x] change UI
 - [ ] Tests
 - [ ] fix prepare-docs
 - [ ] dockerize
