@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  db:
+    hostname: 127.0.0.1
+    image: ankane/pgvector
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      - POSTGRES_DB=chatbot
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - ./db:/var/lib/postgresql/data
