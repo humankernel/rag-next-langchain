@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"test": "vitest",
 		"prepare:data": "tsx -r dotenv/config ./src/scripts/prepare-docs.ts",
 		"prepare:clear": "tsx -r dotenv/config ./src/scripts/prepare-docs.ts --clear"
 	},
@@ -42,11 +43,15 @@
 		"zod": "3.21.4"
 	},
 	"devDependencies": {
+		"@testing-library/react": "^15.0.7",
 		"@types/pdf-parse": "1.1.1",
-		"tsx": "3.12.7",
+		"@vitejs/plugin-react": "^4.2.1",
 		"eslint": "8.46.0",
 		"eslint-config-next": "13.4.13",
+		"jsdom": "^24.0.0",
 		"mammoth": "1.7.2",
-		"pdf-parse": "1.1.1"
+		"pdf-parse": "1.1.1",
+		"tsx": "3.12.7",
+		"vitest": "^1.6.0"
 	}
 }

@@ -6,17 +6,17 @@ export const streamingModel = new ChatOllama({
 	baseUrl: env.OLLAMA_URL,
 	model: env.OLLAMA_MODEL,
 	temperature: 0,
-	verbose: true,
+	// verbose: true,
 });
 
 export const nonStreamingModel = new ChatOllama({
 	baseUrl: env.OLLAMA_URL,
 	model: env.OLLAMA_MODEL,
 	temperature: 0,
-	verbose: true,
+	// verbose: true,
 });
 
 export const mistralEmbeddings = new OllamaEmbeddings({
-    baseUrl: env.OLLAMA_URL,
-    model: env.OLLAMA_MODEL,
+	baseUrl: env.OLLAMA_URL,
+	model: env.OLLAMA_MODEL,
 });

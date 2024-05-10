@@ -26,7 +26,7 @@ export async function loadDocuments(path: string) {
 	}
 }
 
-export async function splitDocuments(docs: unknown) {
+export async function splitDocuments(docs: any) {
 	const textSplitter = new RecursiveCharacterTextSplitter({
 		chunkSize: 1000,
 		chunkOverlap: 200,
