@@ -33,7 +33,6 @@
 		"next-themes": "0.2.1",
 		"pg": "8.11.5",
 		"postcss": "8.4.27",
-		"postgres": "3.4.4",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"tailwind-merge": "1.14.0",
@@ -43,15 +42,16 @@
 		"zod": "3.21.4"
 	},
 	"devDependencies": {
-		"@testing-library/react": "^15.0.7",
+		"@testing-library/react": "15.0.7",
 		"@types/pdf-parse": "1.1.1",
-		"@vitejs/plugin-react": "^4.2.1",
+		"@types/pg": "^8.11.6",
+		"@vitejs/plugin-react": "4.2.1",
 		"eslint": "8.46.0",
 		"eslint-config-next": "13.4.13",
-		"jsdom": "^24.0.0",
+		"jsdom": "24.0.0",
 		"mammoth": "1.7.2",
 		"pdf-parse": "1.1.1",
 		"tsx": "3.12.7",
-		"vitest": "^1.6.0"
+		"vitest": "1.6.0"
 	}
 }

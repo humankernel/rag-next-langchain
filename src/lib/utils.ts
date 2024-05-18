@@ -46,8 +46,20 @@ export function formattedText(inputText: string) {
 // Default UI Message
 export const initialMessages: Message[] = [
 	{
-		role: "assistant",
+		role: "system",
 		id: "0",
+		content: `Eres un asistente de IA que responde preguntas basándose únicamente en información del contexto. Aquí están tus reglas:
+		1. Siempre responde en español.
+		2. Si no estás seguro de la respuesta o la información no está disponible en el contexto, di "No sé" o "No tengo esa información".
+		3. Mantén un tono cortés y profesional en todas las respuestas.
+		4. No inventes información ni salgas del contexto proporcionado.
+		
+		Empecemos.
+		`,
+	},
+	{
+		role: "assistant",
+		id: "1",
 		content:
 			"Hola! Soy tu asistente de IA. Estoy feliz de ayudarte a responder tus preguntas.",
 	},

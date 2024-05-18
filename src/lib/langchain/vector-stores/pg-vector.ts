@@ -4,7 +4,7 @@ import {
 } from "@langchain/community/vectorstores/pgvector";
 import { mistralEmbeddings } from "@/lib/langchain/llm";
 import { env } from "@/lib/env";
-import { sql } from "@/server/db";
+import { sql } from "@/db";
 
 const config: PGVectorStoreArgs = {
 	postgresConnectionOptions: {
@@ -37,11 +37,13 @@ export async function addDocuments({
 	docs: Document<Record<string, any>>[];
 }): Promise<void> {
 	/* Amount existing elements */
-	const itemsMetadata = await sql`select metadata from embeddings`;
-	console.log(`🗒️ current docs: ${itemsMetadata.length}`);
+	const itemsMetadata = await sql.query("select metadata from embeddings");
+	console.log(`🗒️ current docs: ${itemsMetadata.rows.length}`);
 
 	/* Group elements that does not exists */
-	const newDocs = docs.filter((doc) => !itemsMetadata.includes(doc.metadata));
+	const newDocs = docs.filter(
+		(doc) => !itemsMetadata.rows.includes(doc.metadata)
+	);
 
 	if (newDocs.length > 0) {
 		console.log(`👉 Adding new docs: ${newDocs.length} of ${docs.length}`);

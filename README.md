@@ -1,16 +1,27 @@
 
-# TODO
+## BUGS
+
+- [ ] mala reescritura de la pregunta inicial
+- [ ] mala estructura de la respuesta
+- [ ] responde sin contexto
+
+## TODO
 
 - [x] change UI
 - [ ] Tests
+- [ ] Fix Responses
 - [ ] fix prepare-docs
+
+
+## Extras
+
 - [ ] dockerize
 - [ ] accesibility
 
 
-# Getting Started
+## Getting Started
 
-## Start Ollama
+### Start Ollama
 
 ```sh
 # create the model
@@ -26,7 +37,7 @@ OLLAMA_KEEP_ALIVE = 30
 ollama serve
 ```
 
-## Start Postgres (pg-vector)
+### Start Postgres (pg-vector)
 
 ```sh
 # download pv-vector (w/ vpn)
@@ -36,7 +47,7 @@ docker pull ankane/pgvector:latest
 docker compose up -d
 ```
 
-## Start webpage
+### Start webpage
 
 ```sh
 pnpm dev

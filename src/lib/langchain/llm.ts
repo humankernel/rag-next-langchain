@@ -19,4 +19,8 @@ export const nonStreamingModel = new ChatOllama({
 export const mistralEmbeddings = new OllamaEmbeddings({
 	baseUrl: env.OLLAMA_URL,
 	model: env.OLLAMA_MODEL,
+	requestOptions: {
+		temperature: 0,
+		topK: 30,
+	},
 });
