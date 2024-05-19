@@ -39,13 +39,7 @@ export function ChatLine({
 
 	return (
 		<div>
-			<Card
-				className="mb-2"
-				// className={cn("mb-2", {
-				// 	"card-robot": role == "assistant",
-				// 	"card-person": role != "assistant"
-				// })}
-			>
+			<Card className="mb-2">
 				<CardHeader>
 					<CardTitle
 						className={

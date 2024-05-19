@@ -1,9 +1,8 @@
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders/fs/text";
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
-import { DocxLoader } from "langchain/document_loaders/fs/docx";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-
+import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 
 interface Document {
 	pageContent: string;
@@ -19,8 +18,7 @@ export async function loadDocuments(path: string) {
 			path,
 			{
 				".txt": (path) => new TextLoader(path),
-				".pdf": (path) =>
-					new PDFLoader(path, { parsedItemSeparator: "" }),
+				".pdf": (path) => new PDFLoader(path),
 				".docx": (path) => new DocxLoader(path),
 			},
 			true
@@ -32,7 +30,7 @@ export async function loadDocuments(path: string) {
 	}
 }
 
-export async function splitDocuments(docs: any) {
+export async function splitDocuments(docs: Document[]) {
 	const textSplitter = new RecursiveCharacterTextSplitter({
 		chunkSize: 1000,
 		chunkOverlap: 200,

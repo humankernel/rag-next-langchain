@@ -2,8 +2,8 @@ import {
 	PGVectorStore,
 	type PGVectorStoreArgs,
 } from "@langchain/community/vectorstores/pgvector";
-import { mistralEmbeddings } from "@/lib/langchain/llm";
-import { env } from "@/lib/env";
+import { embeddings } from "@/lib/langchain/llm";
+import { env } from "@/lib/env.mjs";
 import { sql } from "@/db";
 
 const config: PGVectorStoreArgs = {
@@ -24,7 +24,7 @@ const config: PGVectorStoreArgs = {
 };
 
 export const pgVectorStore = await PGVectorStore.initialize(
-	mistralEmbeddings,
+	embeddings,
 	config
 );
 

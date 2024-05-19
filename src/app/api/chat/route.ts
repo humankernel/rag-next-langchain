@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callChain } from "@/lib/langchain/langchain";
-import { Message } from "ai";
-import { formatMessage } from "@/lib/utils";
+import { Message, StreamingTextResponse } from "ai";
 import { pgVectorStore } from "@/lib/langchain/vector-stores/pg-vector";
+import { formatMessages } from "@/lib/utils";
+import { model } from "@/lib/langchain/llm";
 
+/**
+ * This handler initializes and calls a retrieval chain. It composes the chain using
+ * LangChain Expression Language. See the docs for more information:
+ *
+ * https://js.langchain.com/docs/guides/expression_language/cookbook#conversational-retrieval-chain
+ */
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 	const messages: Message[] = body.messages ?? [];
-	// console.log("Messages ", messages);
-	const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
+	const previousMessages = messages.slice(0, -1);
+	const formattedPreviousMessages = formatMessages(previousMessages);
 	const question = messages[messages.length - 1].content;
 
 	// console.log("Chat history ", formattedPreviousMessages.join("\n"));
@@ -20,15 +27,24 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const streamingTextResponse = callChain({
+		const { stream, serializedSources } = await callChain({
 			question,
-			chatHistory: formattedPreviousMessages.join("\n"),
-			vectorStore: pgVectorStore
+			chatHistory: formattedPreviousMessages,
+			vectorStore: pgVectorStore,
+			model,
 		});
 
-		return streamingTextResponse;
-	} catch (error) {
-		console.error("Internal server error ", error);
-		return NextResponse.json("Error: Something went wrong. Try again!", { status: 500, });
+		return new StreamingTextResponse(stream, {
+			headers: {
+				"x-message-index": (previousMessages.length + 1).toString(),
+				"x-sources": serializedSources,
+			},
+		});
+	} catch (error: any) {
+		console.error(error)
+		return NextResponse.json(
+			{ error: error.message },
+			{ status: error.status ?? 500 }
+		);
 	}
 }

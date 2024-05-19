@@ -1,3 +1,5 @@
+import { PromptTemplate } from "@langchain/core/prompts";
+
 // Creates a standalone question from the chat-history and the current question
 export const STANDALONE_QUESTION_TEMPLATE = `Dado el siguiente historial de chat y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente sin cambiar su significado original.
 
@@ -28,3 +30,9 @@ Recuerda:
 
 Respuesta:
 `;
+
+export const condenseQuestionPrompt = PromptTemplate.fromTemplate(
+	STANDALONE_QUESTION_TEMPLATE
+);
+
+export const answerPrompt = PromptTemplate.fromTemplate(QA_TEMPLATE);

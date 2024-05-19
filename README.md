@@ -1,23 +1,8 @@
+# 📃 RAG - Next + Langchain
 
-## BUGS
+This is a RAG app. In other words a chatbot with a local modal that response using your documents an only your documents
 
-- [ ] mala reescritura de la pregunta inicial
-- [ ] mala estructura de la respuesta
-- [ ] responde sin contexto
-
-## TODO
-
-- [x] change UI
-- [ ] Tests
-- [ ] Fix Responses
-- [ ] fix prepare-docs
-
-
-## Extras
-
-- [ ] dockerize
-- [ ] accesibility
-
+<video controls src="screenshots/output.mp4" title="Title"></video>
 
 ## Getting Started
 

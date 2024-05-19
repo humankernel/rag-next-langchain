@@ -25,6 +25,11 @@ export const formatMessage = (message: Message) => {
 	}`;
 };
 
+export const formatMessages = (chatHistory: Message[]) => {
+	const formattedDialogueTurns = chatHistory.map(formatMessage);
+	return formattedDialogueTurns.join("\n");
+};
+
 // Reference:
 // github.com/hwchase17/langchainjs/blob/357d6fccfc78f1332b54d2302d92e12f0861c12c/examples/src/guides/expression_language/cookbook_conversational_retrieval.ts#L61
 export const formatChatHistory = (chatHistory: [string, string][]) => {
@@ -46,8 +51,8 @@ export function formattedText(inputText: string) {
 // Default UI Message
 export const initialMessages: Message[] = [
 	{
-		role: "system",
 		id: "0",
+		role: "system",
 		content: `Eres un asistente de IA que responde preguntas basándose únicamente en información del contexto. Aquí están tus reglas:
 		1. Siempre responde en español.
 		2. Si no estás seguro de la respuesta o la información no está disponible en el contexto, di "No sé" o "No tengo esa información".
@@ -58,12 +63,17 @@ export const initialMessages: Message[] = [
 		`,
 	},
 	{
-		role: "assistant",
 		id: "1",
+		role: "assistant",
 		content:
 			"Hola! Soy tu asistente de IA. Estoy feliz de ayudarte a responder tus preguntas.",
 	},
 ];
+
+export const combineDocumentsFn = (docs: Document[]) => {
+	const serializedDocs = docs.map((doc) => doc.pageContent);
+	return serializedDocs.join("\n\n");
+};
 
 interface Data {
 	sources: string[];

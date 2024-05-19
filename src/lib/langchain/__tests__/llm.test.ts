@@ -1,24 +1,12 @@
 import { expect, test } from "vitest";
 import { loadEvaluator } from "langchain/evaluation";
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { OllamaEmbeddings } from "@langchain/community/embeddings/ollama";
+import { embeddings, model } from "../llm";
 
-export const model = new ChatOllama({
-	baseUrl: process.env.OLLAMA_URL,
-	model: process.env.OLLAMA_MODEL,
-	temperature: 0,
-});
-
-export const embedding = new OllamaEmbeddings({
-	baseUrl: process.env.OLLAMA_URL,
-	model: process.env.OLLAMA_MODEL,
-	requestOptions: { temperature: 0 },
-});
 
 const evaluator = await loadEvaluator("criteria", {
 	criteria: "conciseness",
 	llm: model,
-	embedding,
+	embedding: embeddings,
 });
 
 test.each([

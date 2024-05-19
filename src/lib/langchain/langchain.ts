@@ -1,69 +1,100 @@
-import { ConversationalRetrievalQAChain } from "langchain/chains";
+import { RunnableSequence } from "@langchain/core/runnables";
 import {
-	StreamingTextResponse,
-	experimental_StreamData,
-	LangChainStream,
-} from "ai-stream-experimental";
-import { streamingModel, nonStreamingModel } from "./llm";
-import { STANDALONE_QUESTION_TEMPLATE, QA_TEMPLATE } from "./prompt";
-import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
+	BytesOutputParser,
+	StringOutputParser,
+} from "@langchain/core/output_parsers";
+import { answerPrompt, condenseQuestionPrompt } from "./prompt";
+import { Document } from "@langchain/core/documents";
+import { VectorStore } from "@langchain/core/vectorstores";
+import { ChatOllama } from "@langchain/community/chat_models/ollama";
+import { combineDocumentsFn } from "../utils";
 
 type callChainArgs = {
 	question: string;
 	chatHistory: string;
-	vectorStore: PGVectorStore;
+	model: ChatOllama;
+	vectorStore: VectorStore;
 };
 
 export async function callChain({
 	question,
 	chatHistory,
 	vectorStore,
+	model,
 }: callChainArgs) {
-	try {
-		const sanitizedQuestion = question.trim().replaceAll("\n", " ");
-		const { stream, handlers } = LangChainStream({
-			experimental_streamData: true,
-		});
-		const data = new experimental_StreamData();
+	const sanitizedQuestion = question.trim().replaceAll("\n", " ");
 
-		const chain = ConversationalRetrievalQAChain.fromLLM(
-			streamingModel,
-			vectorStore.asRetriever(),
+	/**
+	 * We use LangChain Expression Language to compose two chains.
+	 * To learn more, see the guide here:
+	 *
+	 * https://js.langchain.com/docs/guides/expression_language/cookbook
+	 *
+	 * You can also use the "createRetrievalChain" method with a
+	 * "historyAwareRetriever" to get something prebaked.
+	 */
+	const standaloneQuestionChain = RunnableSequence.from([
+		condenseQuestionPrompt,
+		model,
+		new StringOutputParser(),
+	]);
+
+	let resolveWithDocuments: (value: Document[]) => void;
+	const documentPromise = new Promise<Document[]>((resolve) => {
+		resolveWithDocuments = resolve;
+	});
+
+	const retriever = vectorStore.asRetriever({
+		k: 5,
+		callbacks: [
 			{
-				qaTemplate: QA_TEMPLATE,
-				questionGeneratorTemplate: STANDALONE_QUESTION_TEMPLATE,
-				returnSourceDocuments: true, //default 4
-				questionGeneratorChainOptions: {
-					llm: nonStreamingModel,
+				handleRetrieverEnd(documents) {
+					resolveWithDocuments(documents);
 				},
-			}
-		);
+			},
+		],
+	});
 
-		// Question using chat-history
-		// Reference https://js.langchain.com/docs/modules/chains/popular/chat_vector_db#externally-managed-memory
-		chain
-			.call(
-				{
-					question: sanitizedQuestion,
-					chat_history: chatHistory,
-				},
-				[handlers]
-			)
-			.then(async (res) => {
-				const sourceDocuments = res?.sourceDocuments;
-				const firstTwoDocuments = sourceDocuments.slice(0, 2);
-				const pageContents = firstTwoDocuments.map(
-					({ pageContent }: { pageContent: string }) => pageContent
-				);
-				console.log("already appended ", data);
-				data.append({ sources: pageContents });
-				data.close();
-			});
+	const retrievalChain = retriever.pipe(combineDocumentsFn);
 
-		// Return the readable stream
-		return new StreamingTextResponse(stream, {}, data);
-	} catch (e) {
-		console.error(e);
-		throw new Error("Call chain method failed to execute successfully!!");
-	}
+	const answerChain = RunnableSequence.from([
+		{
+			context: RunnableSequence.from([
+				(input) => input.question,
+				retrievalChain,
+			]),
+			chat_history: (input) => input.chat_history,
+			question: (input) => input.question,
+		},
+		answerPrompt,
+		model,
+	]);
+
+	const conversationalRetrievalQAChain = RunnableSequence.from([
+		{
+			question: standaloneQuestionChain,
+			chat_history: (input) => input.chat_history,
+		},
+		answerChain,
+		new BytesOutputParser(),
+	]);
+
+	const stream = await conversationalRetrievalQAChain.stream({
+		question: sanitizedQuestion,
+		chat_history: chatHistory,
+	});
+
+	const documents = await documentPromise;
+	const serializedSources = Buffer.from(
+		JSON.stringify(
+			documents.map((doc) => {
+				return {
+					pageContent: doc.pageContent.slice(0, 50) + "...",
+					metadata: doc.metadata,
+				};
+			})
+		)
+	).toString("base64");
+
+	return { stream, serializedSources };
 }

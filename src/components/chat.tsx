@@ -1,11 +1,11 @@
 "use client";
 
 import { scrollToBottom, initialMessages, getSources } from "@/lib/utils";
-import { ChatLine } from "./chat-line";
+import { ChatLine } from "@/components/chat-line";
 import { useChat, Message } from "ai-stream-experimental/react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Spinner } from "./ui/spinner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useRef } from "react";
 
 export function Chat() {
@@ -27,19 +27,23 @@ export function Chat() {
 	}, [messages]);
 
 	return (
-		<div className="rounded-2xl border h-[calc(100vh-100px)] flex flex-col justify-between">
+		<div className="rounded-2xl border  h-[calc(100vh-100px)] flex flex-col justify-between">
 			<div className="p-6 overflow-auto" ref={containerRef}>
-				{messages.map(({ id, role, content }: Message, index) => (
-					<ChatLine
-						key={id}
-						role={role}
-						content={content}
-						// Start from the third message of the assistant
-						sources={
-							data?.length ? getSources(data, role, index) : []
-						}
-					/>
-				))}
+				{messages
+					.slice(1)
+					.map(({ id, role, content }: Message, index) => (
+						<ChatLine
+							key={id}
+							role={role}
+							content={content}
+							// Start from the third message of the assistant
+							sources={
+								data?.length
+									? getSources(data, role, index)
+									: []
+							}
+						/>
+					))}
 			</div>
 
 			<form onSubmit={handleSubmit} className="p-4 flex clear-both">
