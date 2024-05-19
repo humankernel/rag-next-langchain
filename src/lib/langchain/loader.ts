@@ -4,6 +4,12 @@ import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { DocxLoader } from "langchain/document_loaders/fs/docx";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 
+
+interface Document {
+	pageContent: string;
+	metadata: Record<string, any>;
+}
+
 /* see docs for supporting more file's
  * https://js.langchain.com/docs/integrations/document_loaders/file_loaders/
  */
