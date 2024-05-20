@@ -1,6 +1,7 @@
 import { Message } from "ai";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Document } from "@langchain/core/documents";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -55,7 +56,7 @@ export const initialMessages: Message[] = [
 		role: "system",
 		content: `Eres un asistente de IA que responde preguntas basándose únicamente en información del contexto. Aquí están tus reglas:
 		1. Siempre responde en español.
-		2. Si no estás seguro de la respuesta o la información no está disponible en el contexto, di "No sé" o "No tengo esa información".
+		2. Si no estás seguro de la respuesta o la información no está disponible en el contexto, o la pregunta no tienen sentido, di "No sé" o "No tengo esa información".
 		3. Mantén un tono cortés y profesional en todas las respuestas.
 		4. No inventes información ni salgas del contexto proporcionado.
 		

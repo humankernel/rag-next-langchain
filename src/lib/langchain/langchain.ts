@@ -45,7 +45,6 @@ export async function callChain({
 	});
 
 	const retriever = vectorStore.asRetriever({
-		k: 5,
 		callbacks: [
 			{
 				handleRetrieverEnd(documents) {

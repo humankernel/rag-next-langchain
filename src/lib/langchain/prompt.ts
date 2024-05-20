@@ -3,9 +3,6 @@ import { PromptTemplate } from "@langchain/core/prompts";
 // Creates a standalone question from the chat-history and the current question
 export const STANDALONE_QUESTION_TEMPLATE = `Dado el siguiente historial de chat y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente sin cambiar su significado original.
 
-Historial de chat: 
-{chat_history}
-
 Entrada de seguimiento: {question}
 
 Pregunta independiente:
@@ -21,10 +18,10 @@ Ahora, con base en la información proporcionada en el contexto, por favor respo
 Pregunta: {question}
 
 Recuerda:
-1. Responde en español.
-2. Si no estás seguro de la respuesta, di "No sé" o "No tengo esa información".
-3. Tu respuesta debe estar basada únicamente en el contexto proporcionado.
-4. Mantén un tono cortés y profesional.
+1. Siempre responde en español.
+2. Si no estás seguro de la respuesta o la información no está disponible en el contexto, o la pregunta no tienen sentido, di "No sé" o "No tengo esa información".
+3. Mantén un tono cortés y profesional en todas las respuestas.
+4. No inventes información ni salgas del contexto proporcionado.
 
 ¡Gracias!
 
