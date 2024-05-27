@@ -1,32 +1,40 @@
-import { expect, test } from "vitest";
-import { loadEvaluator } from "langchain/evaluation";
-import { embeddings, model } from "../llm";
+import { callChain } from ".."
+import { model } from "../llm"
+import { evalPrompt } from "../prompt"
+import { pgVectorStore } from "../vector-stores/pg-vector"
+import { expect, test } from 'vitest'
 
+test("adds 2 + 2 to equal 4", async () => {
+    expect(await queryAndValidate({
+        question: "Cuanto es 2+2?",
+        expected: "4"
+    })).toBe(true)
+})
 
-const evaluator = await loadEvaluator("criteria", {
-	criteria: "conciseness",
-	llm: model,
-	embedding: embeddings,
-});
+async function queryAndValidate({ question, expected }: { question: string, expected: string }): Promise<boolean> {
+    const { stream } = await callChain({
+        question,
+        chatHistory: "",
+        model,
+        vectorStore: pgVectorStore
+    })
 
-test.each([
-	{
-		name: "suma 2 + 2 es igual a 3",
-		input: "Cuanto es 2+2?",
-		prediction: `Cuanto es 2+2? Esta es una pregunta basica.
-	         La respuesta que estas buscando es que dos mas dos es tres`,
-	},
-	{
-		name: "",
-		input: "¿Qué se espera lograr a través del proceso base de Gestión de Procesos de la Organización (GPO)?",
-		prediction: `
-         a) Definir los procesos de la organización que permitan conducir a la organización al cumplimiento de su misión y objetivos estratégicos.
-         b) Establecer una infraestructura tecnológica.
-         c) Elaborar una propuesta estándar de los procesos de la organización.
-         `,
-	},
-])("$name", async ({ input, prediction }) => {
-	const res = await evaluator.evaluateStrings({ input, prediction });
-	if (res.score !== 1) console.log(res.reasoning);
-	expect(res.score).toBe(0);
-});
+    let actual = ""
+    for await (const chunk of stream) {
+        const decoded = new TextDecoder().decode(chunk)
+        actual += decoded
+    }
+
+    console.log({ actual })
+
+    const prompt = await evalPrompt.format({ expected_response: expected, actual_response: actual })
+    const evaluationResultsStr = await model.invoke(prompt)
+    const evaluationResultsStrCleaned = evaluationResultsStr.content.toString().trim().toLocaleLowerCase()
+
+    console.log({ prompt, evaluationResultsStrCleaned })
+
+    if (evaluationResultsStrCleaned.includes("true")) return true
+    else if (evaluationResultsStrCleaned.includes("false")) return false
+    else throw new Error("Invalid evaluation result. Cannot determine if 'true' or 'false'")
+}
+

@@ -4,7 +4,7 @@ import {
 	pgVectorStore,
 } from "@/lib/langchain/vector-stores/pg-vector";
 import { sql } from "@/db";
-import { env } from "@/lib/env.mjs";
+import { env } from "@/env";
 
 const FLAG = process.argv[2] ?? "";
 

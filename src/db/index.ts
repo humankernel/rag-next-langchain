@@ -1,4 +1,4 @@
-import { env } from "../lib/env.mjs";
+import { env } from "../env";
 import pg from "pg";
 
 export const sql = new pg.Pool({

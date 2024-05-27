@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { callChain } from "@/lib/langchain/langchain";
+import { callChain } from "@/lib/langchain";
 import { Message, StreamingTextResponse } from "ai";
 import { pgVectorStore } from "@/lib/langchain/vector-stores/pg-vector";
-import { formatMessages } from "@/lib/utils";
+import { formatMessages } from "@/lib/langchain/utils";
 import { model } from "@/lib/langchain/llm";
 
 /**

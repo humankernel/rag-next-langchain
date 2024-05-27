@@ -11,5 +11,16 @@ const envSchema = z.object({
     DOCS_PATH: z.string().trim().min(1),
 });
 
-export const env = envSchema.parse(process.env)
+// export const env = envSchema.parse(process.env)
 
+export const env = envSchema.parse({
+    PG_HOST: "127.0.0.1",
+    PG_PORT: "5432",
+    PG_USER: "postgres",
+    PG_PASS: "1234",
+    PG_DATABASE: "postgres",
+    OLLAMA_URL: "http://127.0.0.1:11434",
+    OLLAMA_MODEL: "llama2",
+    DOCS_PATH: "docs"
+}
+)

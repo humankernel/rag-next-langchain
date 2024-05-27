@@ -33,3 +33,12 @@ export const condenseQuestionPrompt = PromptTemplate.fromTemplate(
 );
 
 export const answerPrompt = PromptTemplate.fromTemplate(QA_TEMPLATE);
+
+const EVAL_PROMPT = `
+Respuesta esperada: {expected_response}
+Respuesta obtenida: {actual_response}
+---
+(responde con 'true' o 'false') La respuesta obtenida se corresponde con la respuesta esperada? 
+`
+
+export const evalPrompt = PromptTemplate.fromTemplate(EVAL_PROMPT)

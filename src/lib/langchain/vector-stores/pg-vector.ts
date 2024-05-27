@@ -2,9 +2,9 @@ import {
 	PGVectorStore,
 	type PGVectorStoreArgs,
 } from "@langchain/community/vectorstores/pgvector";
-import { embeddings } from "@/lib/langchain/llm";
-import { env } from "@/lib/env.mjs";
-import { sql } from "@/db";
+import { embeddings } from "../../../lib/langchain/llm";
+import { env } from "../../../env";
+import { sql } from "../../../db";
 
 const config: PGVectorStoreArgs = {
 	postgresConnectionOptions: {
@@ -23,10 +23,7 @@ const config: PGVectorStoreArgs = {
 	},
 };
 
-export const pgVectorStore = await PGVectorStore.initialize(
-	embeddings,
-	config
-);
+export const pgVectorStore = await PGVectorStore.initialize(embeddings, config);
 
 export async function addDocuments({
 	vectorStore,

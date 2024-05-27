@@ -30,6 +30,6 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"src/__tests__/page.test.tsx_"
-, "src/lib/langchain/langchain.ts_", "src/lib/env.mjs"	],
+, "src/lib/langchain/langchain.ts_", "src/env.ts", "src/lib/langchain/__tests__/llm.test.ts_"	],
 	"exclude": ["node_modules"]
 }

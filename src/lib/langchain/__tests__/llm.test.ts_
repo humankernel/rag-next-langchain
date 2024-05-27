@@ -1,0 +1,45 @@
+import { expect, test } from "vitest";
+import { loadEvaluator } from "langchain/evaluation";
+import { embeddings, model } from "../llm";
+
+
+
+const evaluator = await loadEvaluator("labeled_criteria", {
+	criteria: "correctness",
+	llm: model,
+	embedding: embeddings,
+});
+
+const TESTS_CONCISENESS = [
+	{
+		name: "suma 2 + 2 es igual a 3",
+		input: "Cuanto es 2+2?",
+		prediction: "cuatro",
+		reference: "La suma de 2+2 es 4"
+	},
+	// {
+	// 	name: "",
+	// 	input: "¿Qué se espera lograr a través del proceso base de Gestión de Procesos de la Organización (GPO)?",
+	// 	prediction: `
+	//      a) Definir los procesos de la organización que permitan conducir a la organización al cumplimiento de su misión y objetivos estratégicos.
+	//      b) Establecer una infraestructura tecnológica.
+	//      c) Elaborar una propuesta estándar de los procesos de la organización.
+	//      `,
+	// },
+]
+
+// test.each(TESTS_CONCISENESS)("$name", async ({ input, prediction }) => {
+// 	console.log({ input, prediction })
+// 	const res = await evaluator.evaluateStrings({ input, prediction });
+// 	console.log(res)
+// 	expect(res.score).toBe(0);
+// });
+
+
+
+
+test("", async () => {
+	const res = await evaluator.evaluateStrings(TESTS_CONCISENESS[0]);
+	console.log(res)
+	expect(res.score).toBe(1);
+})

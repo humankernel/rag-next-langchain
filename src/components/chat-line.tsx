@@ -13,7 +13,7 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Message } from "ai/react";
-import { formattedText } from "@/lib/utils";
+import { formattedText } from "@/lib/langchain/utils";
 
 const convertNewLines = (text: string) =>
 	text.split("\n").map((line, i) => (
