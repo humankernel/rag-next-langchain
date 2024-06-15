@@ -43,3 +43,19 @@ pnpm dev --turbo
 # or
 npx next dev --turbo
 ```
+
+
+## Backups
+
+```sh
+# install cron, rsync in archlinux
+sudo pacman -S cronie rsync
+
+# Para programar la ejecución diaria de tu script, edita el archivo crontab:
+crontab -e
+
+# Esto le dice a cron que ejecute el script backup_incremental.sh todos los días a las 2:00 AM.
+0 2 * * * /ruta/a/tu/script/backup.sh
+```
+
+

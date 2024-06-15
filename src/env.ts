@@ -20,7 +20,7 @@ export const env = envSchema.parse({
     PG_PASS: "1234",
     PG_DATABASE: "postgres",
     OLLAMA_URL: "http://127.0.0.1:11434",
-    OLLAMA_MODEL: "llama2",
+    OLLAMA_MODEL: "llama3",
     DOCS_PATH: "docs"
 }
 )

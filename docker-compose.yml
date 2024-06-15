@@ -11,4 +11,5 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
     volumes:
-      - ./db:/var/lib/postgresql/data
+      # - ./db:/var/lib/postgresql/data
+      - "D:/rag_db:/var/lib/postgresql/data"
